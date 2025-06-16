@@ -2,7 +2,7 @@ resource "aws_s3_bucket" "resume_bucket" {
   bucket = var.resume_bucket_name
   tags = {
     Name        = "Resume"
-    Environment = "Dev"
+    Environment = "prod"
   }
 }
 
@@ -19,7 +19,7 @@ resource "aws_s3_bucket" "logs_bucket" {
   bucket = var.logs_bucket_name
   tags = {
     Name = "Resume"
-    Environment = "Dev"
+    Environment = "prod"
   }
 }
 
@@ -148,12 +148,13 @@ resource "aws_cloudfront_distribution" "s3_distribution" {
   }
   price_class = "PriceClass_200"
   restrictions {
-    geo_restriction {
-      restriction_type = "whitelist"
-      locations        = ["US", "CA", "GB", "DE", "NG"]
-    }
+    # geo_restriction {
+    #   restriction_type = "whitelist"
+    #   locations        = ["US"]
+    # }
   }
   tags = {
+    Name = "Resume"
     Environment = "production"
   }
   viewer_certificate {
