@@ -1,0 +1,12 @@
+# Terraform state & lock files
+/IaC/.terraform/
+/IaC/.terraform.lock.hcl
+/IaC/terraform.tfstate
+/IaC/terraform.tfstate.backup
+/IaC/terraform.tfvars
+/IaC/crash.log 
+
+/frontend/static/img/*
+**/.terraform/
+
+**:Zone.Identifier
