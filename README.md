@@ -75,7 +75,6 @@ This project is a **cloud-native resume website** built using **Terraform**, fea
 > Prerequisites:
 > - AWS CLI configured
 > - Terraform v1.3+
-> - Zip Lambda code before applying (`zip lambda_script.zip script.py`)
 
 ### Step 1: Initialize Terraform
 ```bash

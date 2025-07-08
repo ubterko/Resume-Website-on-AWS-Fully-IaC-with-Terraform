@@ -55,7 +55,7 @@ body {
     gap: 0.5rem;
 }
 
-.icons:hover .icon {
+.icon:hover {
     width: 1.9rem;
     height: 1.9rem;
     gap: 3rem;

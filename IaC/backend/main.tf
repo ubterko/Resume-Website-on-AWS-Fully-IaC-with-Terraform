@@ -135,3 +135,8 @@ resource "aws_lambda_function" "visits_lambda" {
   #   }
   # }
 }
+
+resource "aws_lambda_function_url" "visits" {
+  function_name = var.lambda_function_name 
+  authorization_type = "NONE"
+}

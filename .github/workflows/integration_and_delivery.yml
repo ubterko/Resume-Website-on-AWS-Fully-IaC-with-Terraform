@@ -1,0 +1,34 @@
+name: CI-CD 
+on: 
+    push: 
+        branches: 
+            - main 
+jobs: 
+    CI-CD: 
+        runs-on: ubuntu-latest 
+        steps: 
+            - uses: actions/checkout@v4
+            - uses: hashicorp/setup-terraform@v2
+              with:
+                terraform-version: '1.13.0-alpha20250702'
+            - name: Provisioning Infrastructure
+              id: tf_outputs
+              run: | 
+                # initialize terraform
+                terraform init 
+                # build the infra
+                terraform plan 
+                terraform apply 
+                echo "LAMBDA_URL=$(terraform outputs -raw function_url)" >> GITHUB_OUTPUT
+
+                # tf_outputs=$(terraform outputs -json )
+                # lambda_url=$(echo "$tf_output" | jq -r '') 
+                # echo "lambda=$lambda_url" >> "$GITHUB_ENV"
+            - name: Running Tests 
+              run: | 
+                npm i jest 
+                echo "${{steps.tf_output.outputs.LAMBDA_URL}}"
+                LAMBDA_URL=${{steps.tf_output.outputs.LAMBDA_URL}} npm test 
+            - name: Deploying Application 
+              run: | 
+                aws s3 cp ../../frontend s3://ebonko-resume-bucket-ie25

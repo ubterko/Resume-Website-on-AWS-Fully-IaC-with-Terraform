@@ -1,0 +1,23 @@
+{
+  "name": "myportfolio",
+  "version": "1.0.0",
+  "description": "This project is a **cloud-native resume website** built using **Terraform**, featuring a complete AWS serverless stack. It demonstrates infrastructure automation with Terraform, serverless computing - AWS, and modern web hosting on the cloud.",
+  "main": "jest.config.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ubterko/Resume-Website-on-AWS-Fully-IaC-with-Terraform-.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ubterko/Resume-Website-on-AWS-Fully-IaC-with-Terraform-/issues"
+  },
+  "homepage": "https://github.com/ubterko/Resume-Website-on-AWS-Fully-IaC-with-Terraform-#readme",
+  "devDependencies": {
+    "jest": "^30.0.4"
+  }
+}
