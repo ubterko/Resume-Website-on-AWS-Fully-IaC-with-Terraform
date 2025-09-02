@@ -1,0 +1,15 @@
+.proj {
+    background-color: white;
+}
+
+.proj-img {
+    background-color: red;
+    width: 40vw; 
+    height: 20vh;
+}
+
+.proj-desc {
+    background-color: white; 
+    width: 40vw; 
+    height: 20vh;
+}

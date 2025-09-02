@@ -8,5 +8,10 @@
 
 /frontend/static/img/*
 **/.terraform/
+/node_modules/*
+/.next/*
 
-**:Zone.Identifier
+**:Zone.Identifier 
+/nextapp/
+/node_modules/
+/bin/

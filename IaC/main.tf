@@ -2,6 +2,16 @@ provider "aws" {
   region = var.aws_region
 }
 
+terraform {
+  backend "s3" {
+    bucket         = "terraform-state-bucket-ie25"
+    key            = "envs/dev/terraform.tfstate"
+    region         = "eu-north-1"
+    dynamodb_table = "terraform-locks"
+    encrypt        = true
+  }
+}
+
 module "frontend" {
   source             = "./frontend"
   resume_bucket_name = var.resume_bucket_name

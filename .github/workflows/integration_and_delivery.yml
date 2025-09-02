@@ -6,16 +6,46 @@ on:
 jobs: 
     CI-CD: 
         runs-on: ubuntu-latest 
+        env: 
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID}}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_ACCESS_KEY_ID}}
         steps: 
             - uses: actions/checkout@v4
-            - uses: hashicorp/setup-terraform@v3
+            - uses: hashicorp/setup-terraform@v2
               with:
-                terraform-version: '1.13.0-alpha20250702'
+                terraform_version: '1.12.2'
+            
+            - name: cleanup local terraform
+              run: rm -rf .terraform .terraform.lock.hcl terraform.tfstate*
+
+            - name: Provisioning Remote backend
+              run: |
+                sudo apt install aws 
+
+                aws s3api create-bucket --bucket terraform-state-bucket-ie25 \
+                  --region eu-north-1 
+
+                aws s3api put-bucket-versioning \
+                  --bucket terraform-state-bucket-ie25 \
+                  --versioning-configuration Status=Enabled
+
+                aws dynamodb create-table \
+                  --table-name terraform-locks \
+                  --attribute-definitions AttributeName=LockID,AttributeType=S \
+                  --key-schema AttributeName=LockID,KeyType=HASH \
+                  --provisioned-throughput ReadCapacityUnits=5,WriteCapacityUnits=5
+
+
             - name: Provisioning Infrastructure
               id: tf_outputs
               run: | 
+                # clone terraform repo
+                git clone https://github.com/ubterko/Resume-Website-on-AWS-Fully-IaC-with-Terraform.git portfolio
+                cd portfolio/IaC 
+
                 # initialize terraform
                 terraform init 
+                
                 # build the infra
                 terraform plan 
                 terraform apply 
@@ -24,11 +54,12 @@ jobs:
                 # tf_outputs=$(terraform outputs -json )
                 # lambda_url=$(echo "$tf_output" | jq -r '') 
                 # echo "lambda=$lambda_url" >> "$GITHUB_ENV"
+
             - name: Running Tests 
               run: | 
-                npm i jest 
+                cd .. && npm i jest 
                 echo "${{steps.tf_output.outputs.LAMBDA_URL}}"
                 LAMBDA_URL=${{steps.tf_output.outputs.LAMBDA_URL}} npm test 
+                
             - name: Deploying Application 
-              run: | 
-                aws s3 cp ../../frontend s3://ebonko-resume-bucket-ie25
+              run: aws s3 cp ../../frontend s3://ebonko-resume-bucket-ie25
