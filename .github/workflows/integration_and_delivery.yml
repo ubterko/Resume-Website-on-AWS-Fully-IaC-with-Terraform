@@ -8,6 +8,7 @@ jobs:
         runs-on: ubuntu-latest 
         env: 
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID}}
+<<<<<<< HEAD
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_ACCESS_KEY_ID}}
         steps: 
             - uses: actions/checkout@v4
@@ -24,6 +25,32 @@ jobs:
 
                 aws s3api create-bucket --bucket terraform-state-bucket-ie25 \
                   --region eu-north-1 
+=======
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY}}
+        steps: 
+            - uses: actions/checkout@v4
+            - uses: actions/cache@v4
+              with:
+                path: |
+                  /usr/local/aws-cli
+                  /usr/local/bin/aws
+                  ~/.aws/cli/cache
+                key: ${{ runner.os }}-aws-cli-${{ runner.arch }}-v2
+                restore-keys: |
+                  ${{ runner.os }}-aws-cli-${{ runner.arch }}-
+            - uses: hashicorp/setup-terraform@v2
+              with:
+                terraform_version: '1.12.2'
+
+            - name: Provisioning Remote backend
+              run: |
+                curl "https://s3.amazonaws.com/aws-cli/awscli-bundle.zip" -o "awscli-bundle.zip"
+                unzip awscli-bundle.zip
+                sudo ./awscli-bundle/install -i /usr/local/aws -b /usr/local/bin/aws
+
+                aws s3api create-bucket --bucket terraform-state-bucket-ie25 \
+                  --region us-east-1 
+>>>>>>> 622e3b2 (testing cicd)
 
                 aws s3api put-bucket-versioning \
                   --bucket terraform-state-bucket-ie25 \
@@ -40,26 +67,42 @@ jobs:
               id: tf_outputs
               run: | 
                 # clone terraform repo
+<<<<<<< HEAD
                 git clone https://github.com/ubterko/Resume-Website-on-AWS-Fully-IaC-with-Terraform.git portfolio
                 cd portfolio/IaC 
+=======
+                git clone https://github.com/ubterko/Resume-Website-on-AWS-Fully-IaC-with-Terraform.git portfolio 
+>>>>>>> 622e3b2 (testing cicd)
 
                 # initialize terraform
                 terraform init 
                 
                 # build the infra
                 terraform plan 
-                terraform apply 
+                terraform apply -auto-approve
                 echo "LAMBDA_URL=$(terraform outputs -raw function_url)" >> GITHUB_OUTPUT
 
                 # tf_outputs=$(terraform outputs -json )
                 # lambda_url=$(echo "$tf_output" | jq -r '') 
                 # echo "lambda=$lambda_url" >> "$GITHUB_ENV"
+<<<<<<< HEAD
+=======
+              working-directory: portfolio/IaC
+>>>>>>> 622e3b2 (testing cicd)
 
             - name: Running Tests 
               run: | 
                 cd .. && npm i jest 
                 echo "${{steps.tf_output.outputs.LAMBDA_URL}}"
                 LAMBDA_URL=${{steps.tf_output.outputs.LAMBDA_URL}} npm test 
+<<<<<<< HEAD
                 
             - name: Deploying Application 
               run: aws s3 cp ../../frontend s3://ebonko-resume-bucket-ie25
+=======
+              working-directory: portfolio
+                
+            - name: Deploying Application 
+              run: aws s3 cp /frontend s3://ebonko-resume-bucket-ie25
+              working-directory: portfolio
+>>>>>>> 622e3b2 (testing cicd)

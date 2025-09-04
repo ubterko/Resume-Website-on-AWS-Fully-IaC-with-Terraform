@@ -15,3 +15,7 @@
 /nextapp/
 /node_modules/
 /bin/
+<<<<<<< HEAD
+=======
+.secrets
+>>>>>>> 622e3b2 (testing cicd)
